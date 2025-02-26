@@ -18,7 +18,16 @@ class TestGenerator {
     const componentInfo = this.analyzeComponent(ast);
     const testContent = this.generateTest(componentInfo);
 
-    const testPath = this.componentPath.replace(/\.(jsx?|tsx?)$/, '.test.$1');
+    // Create __tests__ directory if it doesn't exist
+    const componentDir = path.dirname(path.join(this.componentPath, '../..', '__tests__'));
+    const testDir = path.join(componentDir, '__tests__');
+    if (!fs.existsSync(testDir)) {
+      fs.mkdirSync(testDir);
+    }
+
+    // Generate test file in __tests__ directory
+    const componentFileName = path.basename(this.componentPath);
+    const testPath = path.join(testDir, componentFileName.replace(/\.(jsx?|tsx?)$/, '.test.$1'));
     fs.writeFileSync(testPath, testContent);
   }
 
