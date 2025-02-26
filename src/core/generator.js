@@ -40,7 +40,7 @@ class TestGenerator {
           componentInfo.name = path.node.id.name;
         }
       },
-      // 添加对箭头函数组件的支持
+      // Add support for arrow function components
       VariableDeclarator(path) {
         if (path.node.init && 
             (path.node.init.type === 'ArrowFunctionExpression' || 
@@ -49,7 +49,7 @@ class TestGenerator {
         }
       },
       ObjectPattern(path) {
-        // 收集解构的props
+        // Collecting Destructured Props
         path.node.properties.forEach(prop => {
           if (prop.type === 'ObjectProperty') {
             componentInfo.props.push(prop.key.name);
@@ -58,7 +58,7 @@ class TestGenerator {
       }
     });
 
-    // 如果还是没有找到组件名，使用文件名作为组件名
+    // If the component name is still not found, use the file name as the component name
     if (!componentInfo.name) {
       componentInfo.name = path.basename(this.componentPath, path.extname(this.componentPath));
     }
@@ -74,7 +74,7 @@ class TestGenerator {
           }
           return `${prop}="test${prop}"`;
         }).join(' ')
-      : 'text="测试按钮"';
+      : 'text="Test Button"';
 
     return `
 import React from 'react';
@@ -82,8 +82,8 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import ${componentInfo.name} from './${path.basename(this.componentPath)}';
 
-describe('${componentInfo.name} 组件测试', () => {
-  it('应该正常渲染', () => {
+describe('${componentInfo.name} Component Test', () => {
+  it('should render normally', () => {
     const { container } = render(<${componentInfo.name} ${propsString} />);
     expect(container).toBeTruthy();
   });
@@ -91,29 +91,29 @@ describe('${componentInfo.name} 组件测试', () => {
   ${componentInfo.props.map(prop => {
     if (prop === 'onClick') {
       return `
-  it('应该正确处理 ${prop} 属性', () => {
+  it('should handle ${prop} prop correctly', () => {
     const handle${prop} = jest.fn();
-    render(<${componentInfo.name} ${prop}={handle${prop}} text="测试按钮" />);
+    render(<${componentInfo.name} ${prop}={handle${prop}} text="Test Button" />);
     
-    const button = screen.getByText('测试按钮');
+    const button = screen.getByText('Test Button');
     fireEvent.click(button);
     
     expect(handle${prop}).toHaveBeenCalledTimes(1);
   });`;
     }
     return `
-  it('应该正确处理 ${prop} 属性', () => {
+  it('should handle ${prop} prop correctly', () => {
     const test${prop} = 'test${prop}';
     render(<${componentInfo.name} ${prop}={test${prop}} />);
     expect(screen.getByText(test${prop})).toBeInTheDocument();
   });`;
   }).join('\n')}
 
-  it('点击时应该触发onClick事件', () => {
+  it('should trigger onClick event when clicked', () => {
     const handleClick = jest.fn();
-    render(<${componentInfo.name} onClick={handleClick} text="测试按钮" />);
+    render(<${componentInfo.name} onClick={handleClick} text="Test Button" />);
     
-    const button = screen.getByText('测试按钮');
+    const button = screen.getByText('Test Button');
     fireEvent.click(button);
     
     expect(handleClick).toHaveBeenCalledTimes(1);

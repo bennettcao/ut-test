@@ -6,15 +6,15 @@ const path = require('path');
 
 program
   .version('1.0.0')
-  .argument('<component-path>', '要生成测试的组件路径')
+  .argument('<component-path>', 'Path to the component to generate tests for')
   .action(async (componentPath) => {
     try {
       const absolutePath = path.resolve(process.cwd(), componentPath);
       const generator = new TestGenerator(absolutePath);
       await generator.generate();
-      console.log('✅ 测试文件生成成功！');
+      console.log('✅ Test file generated successfully！');
     } catch (error) {
-      console.error('❌ 生成测试文件时出错:', error);
+      console.error('❌ Error generating test file:', error);
       process.exit(1);
     }
   });
