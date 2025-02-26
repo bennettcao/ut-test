@@ -27,7 +27,7 @@ ut-generator/
 ```
 cd ut-generator
 npm install
-npm bin/generate.js src/components/YourComponent.jsx
+node bin/generate.js src/components/YourComponent.jsx
 ```
 
 
