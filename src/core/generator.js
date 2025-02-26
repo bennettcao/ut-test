@@ -117,11 +117,22 @@ class TestGenerator {
         }).join(' ')
       : 'text="Test Button"';
 
+    // Calculate the relative path from test file to component file
+    const componentDir = path.dirname(this.componentPath);
+    const testDir = path.join(componentDir, './..', '__tests__');
+    const componentRelativePath = path.relative(testDir, this.componentPath);
+    
+    // Remove extension and normalize path separators to forward slashes
+    const importPath = componentRelativePath
+      .replace(/\.(jsx?|tsx?)$/, '')
+      .split(path.sep)
+      .join('/');
+
     return `
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import ${componentInfo.name} from './${path.basename(this.componentPath)}';
+import ${componentInfo.name} from '${importPath}';
 
 describe('${componentInfo.name} Component Test', () => {
   it('should render normally', () => {

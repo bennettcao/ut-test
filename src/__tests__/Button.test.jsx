@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import Button from './Button.jsx';
+import Button from '../components/Button';
 
 describe('Button Component Test', () => {
   it('should render normally', () => {
