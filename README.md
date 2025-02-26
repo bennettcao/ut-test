@@ -11,6 +11,7 @@
 
 ## 项目结构
 
+```
 ut-generator/
 ├── src/
 │ ├── core/ # 核心解析和生成逻辑
@@ -18,14 +19,17 @@ ut-generator/
 │ └── utils/ # 工具函数
 ├── bin/ # CLI工具
 └── package.json
-
+```
 
 使用说明：
 
 1. 首先安装依赖：
+```
 cd ut-generator
 npm install
 npm bin/generate.js src/components/YourComponent.jsx
+```
+
 
 这个基础项目提供了：
 1. 自动分析React组件结构
