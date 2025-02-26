@@ -40,25 +40,57 @@ class TestGenerator {
     };
 
     traverse(ast, {
+      ExportDefaultDeclaration(path) {
+        // Get name from default export
+        if (path.node.declaration.type === 'Identifier') {
+          componentInfo.name = path.node.declaration.name;
+        } else if (path.node.declaration.type === 'ClassDeclaration') {
+          componentInfo.name = path.node.declaration.id.name;
+          componentInfo.isClass = true;
+        } else if (path.node.declaration.type === 'FunctionDeclaration') {
+          componentInfo.name = path.node.declaration.id.name;
+        }
+      },
+      ExportNamedDeclaration(path) {
+        // Get name from named export
+        if (path.node.declaration) {
+          if (path.node.declaration.type === 'ClassDeclaration') {
+            componentInfo.name = path.node.declaration.id.name;
+            componentInfo.isClass = true;
+          } else if (path.node.declaration.type === 'FunctionDeclaration') {
+            componentInfo.name = path.node.declaration.id.name;
+          } else if (path.node.declaration.type === 'VariableDeclaration') {
+            const declaration = path.node.declaration.declarations[0];
+            if (declaration.init && 
+                (declaration.init.type === 'ArrowFunctionExpression' || 
+                 declaration.init.type === 'FunctionExpression')) {
+              componentInfo.name = declaration.id.name;
+            }
+          }
+        }
+      },
+      // Fallback to other declarations if no export is found
       ClassDeclaration(path) {
-        componentInfo.name = path.node.id.name;
-        componentInfo.isClass = true;
+        if (!componentInfo.name) {
+          componentInfo.name = path.node.id.name;
+          componentInfo.isClass = true;
+        }
       },
       FunctionDeclaration(path) {
         if (!componentInfo.name) {
           componentInfo.name = path.node.id.name;
         }
       },
-      // Add support for arrow function components
       VariableDeclarator(path) {
-        if (path.node.init && 
+        if (!componentInfo.name && 
+            path.node.init && 
             (path.node.init.type === 'ArrowFunctionExpression' || 
              path.node.init.type === 'FunctionExpression')) {
           componentInfo.name = path.node.id.name;
         }
       },
       ObjectPattern(path) {
-        // Collecting Destructured Props
+        // Collect destructured props
         path.node.properties.forEach(prop => {
           if (prop.type === 'ObjectProperty') {
             componentInfo.props.push(prop.key.name);
@@ -67,7 +99,7 @@ class TestGenerator {
       }
     });
 
-    // If the component name is still not found, use the file name as the component name
+    // Use filename as fallback if no component name is found
     if (!componentInfo.name) {
       componentInfo.name = path.basename(this.componentPath, path.extname(this.componentPath));
     }
