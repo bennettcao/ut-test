@@ -1,29 +1,29 @@
-# React Jest 测试脚本生成器
+# React Jest Test Script Generator
 
-本项目作为React项目的子目录，用于自动生成Jest测试脚本。
+This project serves as a subdirectory of React projects, used for automatically generating Jest test scripts.
 
-## 功能特点
-- 自动分析React组件结构
-- 生成基础Jest测试用例
-- 支持组件属性测试
-- 支持事件处理测试
-- 支持异步操作测试
+## Features
+- Automatically analyze React component structure
+- Generate basic Jest test cases
+- Support component props testing
+- Support event handling testing
+- Support async operation testing
 
-## 项目结构
+## Project Structure
 
 ```
 ut-generator/
 ├── src/
-│ ├── core/ # 核心解析和生成逻辑
-│ ├── templates/ # 测试用例模板
-│ └── utils/ # 工具函数
-├── bin/ # CLI工具
+│ ├── core/ # Core parsing and generation logic
+│ ├── templates/ # Test case templates
+│ └── utils/ # Utility functions
+├── bin/ # CLI tools
 └── package.json
 ```
 
-使用说明：
+Usage Instructions:
 
-1. 首先安装依赖：
+1. First install dependencies:
 ```
 cd ut-generator
 npm install
@@ -31,14 +31,14 @@ node bin/generate.js src/components/YourComponent.jsx
 ```
 
 
-这个基础项目提供了：
-1. 自动分析React组件结构
-2. 提取组件的方法和属性
-3. 生成基础的Jest测试用例
-4. 支持JSX和TypeScript
+This base project provides:
+1. Automatic analysis of React component structure
+2. Extraction of component methods and props
+3. Generation of basic Jest test cases
+4. Support for JSX and TypeScript
 
-你可以根据需要扩展以下功能：
-1. 添加更多测试模板
-2. 支持更复杂的组件分析
-3. 添加配置文件支持
-4. 增加测试覆盖率检查
+You can extend the following features as needed:
+1. Add more test templates
+2. Support more complex component analysis
+3. Add configuration file support
+4. Add test coverage checking
